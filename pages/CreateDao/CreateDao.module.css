@@ -1,0 +1,33 @@
+.container {
+ padding-top: 0px;
+  min-height: 100vh;
+}
+
+.title {
+  width: 720px;
+  max-width: 95%;
+}
+
+.divider {
+  height: 1px;
+  width: 960px;
+  max-width: 95%;
+  background: #ebebeb;
+}
+
+.form {
+  width: 640px;
+  max-width: 95%;
+}
+
+.form h6 {
+  margin-bottom: 0.5rem;
+}
+
+.image {
+  height: 80px;
+  width: 160px;
+  border: 1px solid #999ca0;
+  border-radius: 8px;
+  object-fit: cover;
+}

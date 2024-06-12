@@ -1,0 +1,67 @@
+{ 	"allchains": [
+    {
+        "name": "Moonbase Alpha",
+        "wormholeChain":"moonbeam",
+        "chain": "MOON",
+        "rpc": ["https://rpc.api.moonbase.moonbeam.network", "wss://wss.api.moonbase.moonbeam.network"],
+        "faucets": [],
+        "nativeCurrency": { "name": "Dev", "symbol": "DEV", "decimals": 18 },
+        "infoURL": "https://docs.moonbeam.network/networks/testnet/",
+        "shortName": "mbase",
+        "chainId": 1287,
+        "networkId": 1287,
+        "explorers": [{ "name": "moonscan", "url": "https://moonbase.moonscan.io", "standard": "none" }]
+    },
+    {
+        "name": "Binance Smart Chain Testnet",
+        "chain": "BSC",
+        "wormholeChain":"bsc",
+        "rpc": [
+            "https://data-seed-prebsc-1-s1.binance.org:8545",
+            "https://data-seed-prebsc-2-s1.binance.org:8545",
+            "https://data-seed-prebsc-1-s2.binance.org:8545",
+            "https://data-seed-prebsc-2-s2.binance.org:8545",
+            "https://data-seed-prebsc-1-s3.binance.org:8545",
+            "https://data-seed-prebsc-2-s3.binance.org:8545"
+        ],
+        "faucets": ["https://testnet.binance.org/faucet-smart"],
+        "nativeCurrency": { "name": "Binance Chain Native Token", "symbol": "tBNB", "decimals": 18 },
+        "infoURL": "https://testnet.binance.org/",
+        "shortName": "bnbt",
+        "chainId": 97,
+        "networkId": 97,
+        "explorers": [{ "name": "bscscan-testnet", "url": "https://testnet.bscscan.com", "standard": "EIP3091" }]
+    },
+    {
+        "name": "Goerli",
+        "title": "Ethereum Testnet Goerli",
+        "wormholeChain":"ethereum",
+        "chain": "ETH",
+        "rpc": ["https://goerli.infura.io/v3/32f0f36f9fa64d1dabac0dbc2a768ba2", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://rpc.goerli.mudit.blog/"],
+        "faucets": ["http://fauceth.komputing.org?chain=5&address=${ADDRESS}", "https://goerli-faucet.slock.it?address=${ADDRESS}", "https://faucet.goerli.mudit.blog"],
+        "nativeCurrency": { "name": "Goerli Ether", "symbol": "GoerliETH", "decimals": 18 },
+        "infoURL": "https://goerli.net/#about",
+        "shortName": "gor",
+        "chainId": 5,
+        "networkId": 5,
+        "ens": { "registry": "0x112234455c3a32fd11230c42e7bccd4a84e02010" },
+        "explorers": [{ "name": "etherscan-goerli", "url": "https://goerli.etherscan.io", "standard": "EIP3091" }]
+    },
+    {
+        "name": "Celo Alfajores Testnet",
+        "chainId": 44787,
+        "shortName": "ALFA",
+        "wormholeChain":"celo",
+        "chain": "CELO",
+        "networkId": 44787,
+        "nativeCurrency": { "name": "CELO", "symbol": "CELO", "decimals": 18 },
+        "rpc": ["https://alfajores-forno.celo-testnet.org", "wss://alfajores-forno.celo-testnet.org/ws"],
+        "faucets": ["https://celo.org/developers/faucet", "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"],
+        "infoURL": "https://docs.celo.org/",
+        "explorers": [{ "name": "Celoscan", "url": "https://celoscan.io", "standard": "EIP3091" }],
+        "ECC":"0x9f3eACd65f78aaDc89241b1c1e601bA9b5DE9F27",
+        "Core": "0x88505117CA88e7dd2eC6EA1E13f0948db2D50D56"
+        
+    }
+]
+}

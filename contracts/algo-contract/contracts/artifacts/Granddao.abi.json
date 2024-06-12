@@ -1,0 +1,345 @@
+{
+  "name": "Granddao",
+  "desc": "",
+  "methods": [
+    {
+      "name": "pay",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "createDao",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_dao_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_dao_wallet",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "_dao_uri",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "_template",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "updateTemplate",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_dao_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_template",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "string",
+        "desc": ""
+      }
+    },
+    {
+      "name": "createGoal",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_goal_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_goal_uri",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "_dao_id",
+          "type": "uint64",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "createIdeas",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_uri",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "_goal_id",
+          "type": "uint64",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "createIdeasVote",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_votes_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_goal_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_wallet",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "sendMsg",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_message_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_message",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "_sender",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "sendReply",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_reply_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_message_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_reply",
+          "type": "string",
+          "desc": ""
+        },
+        {
+          "name": "ideas_id",
+          "type": "uint64",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "addDonation",
+      "args": [
+        {
+          "name": "_donation_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_doantion",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_donator",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "joinCommunity",
+      "args": [
+        {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
+          "name": "_join_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "dao_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "person",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "uint64",
+        "desc": ""
+      }
+    },
+    {
+      "name": "VoteIdeasEVM",
+      "args": [
+        {
+          "name": "_ideas_votes_id",
+          "type": "byte[]",
+          "desc": ""
+        },
+        {
+          "name": "_goal_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_ideas_id",
+          "type": "uint64",
+          "desc": ""
+        },
+        {
+          "name": "_wallet",
+          "type": "string",
+          "desc": ""
+        }
+      ],
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      }
+    },
+    {
+      "name": "createApplication",
+      "desc": "",
+      "returns": {
+        "type": "void",
+        "desc": ""
+      },
+      "args": []
+    }
+  ]
+}

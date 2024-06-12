@@ -1,0 +1,64 @@
+.topicAvatar{
+    border-top: 1px solid rgb(232, 232, 232);
+    padding-top: 15px;
+    width: 45px;
+    float: left;
+}
+
+.clearfix{
+    width: 100%;
+    float: left;
+    min-width: 0px;
+    position: relative;
+    border-top: 1px solid rgb(232, 232, 232);
+    padding: 12px 0px 0px;
+}
+
+.TopicMetaData{
+    display: flex;
+    align-items: center;
+    padding: 0px 11px 0.25em;
+}
+
+
+.TriggerUserCard{
+    flex: 1 1 auto;
+    overflow: hidden;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    color: #41AED3;
+}
+
+.PostInfos{
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+}
+
+.cooked{
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    overflow: hidden;
+    padding: 1em 11px 0.25em;
+    color: var(--foreground);
+}
+
+.PostMenuArea{
+    margin: 20px 0px;
+    position: relative;
+    padding-left: 11px;
+}
+
+.reply{
+    height: 1em;
+    width: 1em;
+    line-height: 1;
+    display: inline-flex;
+    position: relative;
+    vertical-align: -0.125em;
+    fill: rgb(96, 96, 96);
+    overflow: visible;
+    opacity: 1;
+    color: rgb(96, 96, 96);
+}

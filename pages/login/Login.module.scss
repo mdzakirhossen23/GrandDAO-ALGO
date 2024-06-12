@@ -1,0 +1,31 @@
+.container {
+  padding-top: 176px;
+  min-height: 93vh;
+  justify-content: center;
+  @media (min-width: 320px ) {
+    padding: 5vw;
+    zoom:0.6;
+  }
+  @media (min-width: 375px) {
+    zoom:0.7;
+  }
+  @media (min-width: 425px) {
+    zoom:0.8;
+  }
+  @media (min-width: 768px ) {
+    zoom:1;
+   
+  }
+}
+
+.title {
+  width: 720px;
+  max-width: 95%;
+}
+
+.divider {
+  height: 1px;
+  width: 960px;
+  max-width: 95%;
+  background: #ebebeb;
+}
