@@ -10,25 +10,25 @@ import { ethers } from "ethers";
 import FormControl, { useFormControl } from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
-import vTokenAbi from '../../../services/json/vTokenABI.json';
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
+
+
 import LoadingButton from "@mui/lab/LoadingButton";
 import Container from "@mui/material/Container";
 import { getChain } from "../../../services/useContract";
 import Alert from "@mui/material/Alert";
-import { useUtilsContext } from '../../../contexts/UtilsContext';
 import algosdk from 'algosdk';
+import { useAlgoContext } from "../../../contexts/AlgoContext";
+import * as algokit from '@algorandfoundation/algokit-utils';
 
 
 
-export default function DonateCoin({ ideasid, show, onHide, address }) {
+export default function DonateCoin({ ideasid, show, onHide, address,title }) {
   const [Balance, setBalance] = useState("");
   const [Token, setToken] = useState("");
   const [Coin, setCoin] = useState("Algo");
   const [isLoading, setisLoading] = useState(false);
   const [Amount, setAmount] = useState(0);
-  const {  getUSDPriceForChain } = useUtilsContext();
+  const {  accountAddress,algodClient,appClient,stringToBytes } = useAlgoContext();
   let alertBox = null;
 
 
@@ -65,15 +65,18 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
     setisLoading(true);
 
     ShowAlert("pending", "Sending Transaction....");
+
+    
+
+    
     const boxMBRPayment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
-      from: CurrentAddress,
+      from: accountAddress.address,
       to: address,
       amount: Number(amount.value) * 1e6,
       suggestedParams: await algokit.getTransactionParams(undefined, algodClient),
     });
-
-    (await appClient.addDonation({ boxMBRPayment: boxMBRPayment, _donation_id: await stringToBytes("", "_donations_ids"), _ideas_id: await stringToBytes(ideasid, ""), _ideas_id_int: Number(ideasid), _doantion: Number(amount.value) * 1e6, _donator: CurrentAddress }, {
-      boxes: [await stringToBytes("_donations", "_donation_id"), await stringToBytes("_ideas_uris" + ideasid, "")]
+    (await appClient.addDonation({ boxMBRPayment: boxMBRPayment, _donation_id: await stringToBytes("", "_donations_ids"), _ideas_id: await stringToBytes(ideasid, ""), _ideas_id_int: Number(ideasid), _doantion:  Number(amount.value) * 1e6, _donator: accountAddress.address }, {
+      boxes: [await stringToBytes("_donated"+ideasid, ""), await stringToBytes("_donations", "_donations_ids")],
     }));
 
     ShowAlert("success", "Donation success!");
@@ -95,9 +98,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
       setToken(" Algo");
       const acctInfo = await algodClient.accountInformation(accountAddress?.address).do();
       setBalance(acctInfo.amount / 1e6);
-      let UsdEchangePrice = 0.14;
-      let amount = (SubsPrice) / Number(UsdEchangePrice);
-      setAmount(Number(amount.toPrecision(5)))
     } else {
       const Web3 = require("web3");
       const web3 = new Web3(window.ethereum);
@@ -105,9 +105,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
       let token = " " + getChain(Number(window.ethereum.networkVersion)).nativeCurrency.symbol;
       setToken(token);
       setBalance((Balance / 1000000000000000000).toPrecision(5));
-      let UsdEchangePrice = await getUSDPriceForChain();
-      let amount = (SubsPrice) / Number(UsdEchangePrice);
-      setAmount(Number(amount.toPrecision(5)))
     }
 
   }
@@ -132,7 +129,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
                 Error....
               </Alert>
             </div>
-
             <StyledPaper sx={{ my: 1, mx: "auto", p: 2 }}>
               <div variant="standard">
                 <InputLabel>Ideas</InputLabel>
@@ -144,7 +140,7 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
               <FormControl variant="standard">
                 <InputLabel>Amount ({Token})</InputLabel>
 
-                <Input name="amount"   onChange={(e) => setAmount(Number(e.target.value))} />
+                <Input name="amount" defaultValue={Amount}   onChange={(e) => setAmount(Number(e.target.value))} />
                 <div>
                   <p>Balance {Balance} {Token}</p>
                 </div>
@@ -154,14 +150,12 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
                 flexDirection: 'column',
                 justifyContent: 'center'
               }}>
-                <InputLabel>USD</InputLabel>
-                <p>${SubsPrice}</p>
               </div>
             </StyledPaper>
 
             <DialogActions>
               {Amount <= Number( Balance) ? (<><LoadingButton type="submit" name="JoinBTN" loading={isLoading} className="btn-secondary" size="medium">
-                Join
+                Donate
               </LoadingButton></>) : (<>
                 <span style={{ color: "red" }}>
                   Insufficent funds
@@ -171,62 +165,7 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
 
             </DialogActions>
 
-            {CurrentChainNetwork !== 1287 ? <><StyledPaper sx={{ my: 1, mx: "auto", p: 2 }}>
-              <div variant="standard">
-                <InputLabel>Target Chain</InputLabel>
-                <span>Moonbase Alpha</span>
-              </div>
-            </StyledPaper></> : <></>}
 
-            <StyledPaper sx={{ my: 1, mx: "auto", p: 2 }}>
-              <div variant="standard">
-                <InputLabel>Target Address</InputLabel>
-                <span>{address}</span>
-              </div>
-            </StyledPaper>
-            {CurrentChainNetwork !== 1287 ? <>
-              <StyledPaper sx={{ my: 1, mx: "auto", p: 2 }}>
-                <div variant="standard">
-                  <InputLabel>From Chain</InputLabel>
-                  <span>{CurrentChain}</span>
-                </div>
-              </StyledPaper>
-            </> : <>
-              <StyledPaper sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", my: 1, mx: "auto", p: 2 }}>
-                <FormControl variant="standard" fullWidth>
-                  <InputLabel>Coin</InputLabel>
-
-                  <Select value={Coin} onChange={(e) => setCoin(e.target.value)}>
-
-                    <MenuItem value="DEV" selected>DEV</MenuItem>
-                    <MenuItem value="xcvGLMR">xcvGLMR</MenuItem>
-                  </Select>
-                </FormControl>
-
-              </StyledPaper>
-            </>}
-            <StyledPaper sx={{ my: 1, mx: "auto", p: 2 }}>
-              <div variant="standard">
-                <InputLabel>From Address</InputLabel>
-                <span>{CurrentAddress} (Your)</span>
-              </div>
-            </StyledPaper>
-            <StyledPaper sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", my: 1, mx: "auto", p: 2 }}>
-              <FormControl variant="standard">
-                <InputLabel>Amount</InputLabel>
-                <Input name="amount" />
-              </FormControl>
-              <div>
-                <InputLabel>Balance</InputLabel>
-                <p>{Balance}</p>
-              </div>
-            </StyledPaper>
-
-            <DialogActions>
-              <LoadingButton type="submit" name="DonateBTN" loading={isLoading} className="btn-secondary" size="medium">
-                Donate
-              </LoadingButton>
-            </DialogActions>
           </form>
         </Container>
       </DialogContent>

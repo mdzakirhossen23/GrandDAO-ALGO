@@ -10,22 +10,22 @@ const fixture = algorandFixture();
 let appClient: GranddaoClient;
 let appId = 0;
 let customAbiType = {
-  "_dao_ids": "uint64",
-  "_dao_uris": "(string,string,string)",
-  "_template_uris": "string",
-  "_goal_ids": "uint64",
-  "_goal_uris": "(uint64,string)",
-  "_ideas_ids": "uint64",
-  "_ideas_uris": "(uint64,string,uint64)",
-  "_ideas_vote_ids": "uint64",
-  "all_ideas_votes": "(uint64,uint64,string)",
-  "_donations_ids": "uint64",
-  "_donated": "uint64",
-  "_donations": "(uint64,string,uint64)",
-  "_message_ids": "uint64",
-    "all_messages": "(uint64,uint64,string,string)",
-    "_join_ids":"uint64",
-    "_joined_person": "(uint64,string)",
+  "_dao_ids": ["uint64", 0],
+  "_dao_uris": ["(string,string,string)", ["", "", ""]],
+  "_template_uris": ["string", ""],
+  "_goal_ids": ["uint64", 0],
+  "_goal_uris": ["(uint64,string)", [0, ""]],
+  "_ideas_ids": ["uint64", 0],
+  "_ideas_uris": ["(uint64,string,uint64)", [0, "", ""]],
+  "_donations_ids": ["uint64", 0],
+  "_donated": ["uint64", 0],
+  "_donations": ["(uint64,string,uint64)", [0, "", 0]],
+  "_ideas_vote_ids": ["uint64", 0],
+  "all_ideas_votes": ["(uint64,uint64,string)", [0, 0, ""]],
+  "_message_ids": ["uint64", 0],
+  "all_messages": ["(uint64,uint64,string,string)", [0, 0, "", ""]],
+  "_join_ids": ["uint64", 0],
+  "_joined_person": ["(uint64,string)", [0, ""]],
 
   abi: (key: string): string => {
     return customAbiType[key as keyof typeof customAbiType].toString();
@@ -168,13 +168,15 @@ function donations_uri(_donations_id: Number) {
 async function getAllGlobalMap() {
   const { algod, testAccount } = fixture.context;
 
+
+  allMaps = new Object();
   var appInfo = await algod.getApplicationByID(appId).do();
   let all_global_states = appInfo.params['global-state'];
-  if (all_global_states == undefined) return [];
+  if (all_global_states == undefined) return {};
   for (let i = 0; i < all_global_states.length; i++) {
 
     const element = all_global_states[i];
-    let state_key = (atob(element.key)).replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '') as string;
+    let state_key = (atob(element.key)).replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '');
     let key = state_key;
     let splittedkey = key.split("/");
     if (splittedkey.length > 1) {
@@ -189,8 +191,8 @@ async function getAllGlobalMap() {
       data = (valueType.decode(globalValue));
 
       if (splittedkey.length > 1) {
-        let newdata: any = {};
-        newdata[splittedkey[1] as string] = data
+        let newdata:any = {};
+        newdata[splittedkey[1]] = data
         appendToMaps(key, newdata);
       } else {
         appendToMaps(key, data);
@@ -198,8 +200,8 @@ async function getAllGlobalMap() {
     } else {
 
       if (splittedkey.length > 1) {
-        let newdata: any = {};
-        newdata[splittedkey[1] as string] = Number(element.value.uint);
+        let newdata:any = {};
+        newdata[splittedkey[1]] = Number(element.value.uint);
         appendToMaps(key, newdata);
       } else {
         appendToMaps(key, Number(element.value.uint));
@@ -211,55 +213,17 @@ async function getAllGlobalMap() {
 
 async function getAllBoxMap() {
   const { algod, testAccount } = fixture.context;
-  let output = algod.getApplicationBoxes(appId).do();
+  let output = await algod.getApplicationBoxes(appId).do();
 
   console.log(output);
-
-  // var appInfo = await algod.getApplicationByID(appId).do();
-  // let all_global_states = appInfo.params['global-state'];
-  // for (let i = 0; i < all_global_states.length; i++) {
-
-  //   const element = all_global_states[i];
-  //   let state_key = (atob(element.key)).replace(/[\x00-\x08\x0E-\x1F\x7F-\uFFFF]/g, '') as string;
-  //   let key = state_key;
-  //   let splittedkey = key.split("/");
-  //   if (splittedkey.length > 1) {
-  //     key = splittedkey[0];
-  //   }
-
-  //   let variable_abi = customAbiType.abi(key);
-  //   let valueType = ABIType.from(variable_abi);
-  //   if (element.value.type == 1) {
-  //     const globalValue = Buffer.from(element.value.bytes, 'base64');
-  //     let data = null;
-  //     data = (valueType.decode(globalValue));
-
-  //     if (splittedkey.length > 1) {
-  //       let newdata :any = {};
-  //       newdata[splittedkey[1] as string] = data
-  //       appendToMaps(key, newdata);
-  //     } else {
-  //       appendToMaps(key, data);
-  //     }
-  //   } else {
-
-  //     if (splittedkey.length > 1) {
-  //       let newdata :any = {};
-  //       newdata[splittedkey[1] as string] =Number( element.value.uint);
-  //       appendToMaps(key, newdata);
-  //     } else {
-  //       appendToMaps(key, Number( element.value.uint));
-  //     }
-  //   }
-  // }
-  return allMaps;
+  return output;
 }
 async function stringToBytes(keyid: string, increment_id: string = "") {
   let increment: string = "";
 
   if (increment_id !== "") {
-    let increment_in_db  = (await getAllGlobalMap())[increment_id];
-    increment = increment_in_db === undefined?0:increment_in_db;
+    let increment_in_db = (await getAllGlobalMap())[increment_id];
+    increment = increment_in_db === undefined ? 0 : increment_in_db;
   }
 
   return new Uint8Array(Buffer.from(keyid + increment));
@@ -293,7 +257,10 @@ describe('Granddao', () => {
   });
 
   test('getState', async () => {
+
+
     const { appAddress } = await appClient.appClient.getAppReference();
+
 
     const boxMBRPayment = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
       from: sender.addr,
@@ -321,18 +288,21 @@ describe('Granddao', () => {
     // (await appClient.setGoal({ _goal_uri: "goal2", _goal_id: 0 })).return!;
 
 
-    // //Ideas
-    // (await appClient.createIdeas({ boxMBRPayment:boxMBRPayment,  _ideas_id: await stringToBytes("", "_ideas_ids"), _ideas_uri: "goal", _goal_id: 0 } ,{
-    //   boxes: [await stringToBytes("_ideas_uris", "_ideas_ids")]
-    // })).return!;
+    //Ideas
+    (await appClient.createIdeas({ boxMBRPayment:boxMBRPayment,  _ideas_id: await stringToBytes("", "_ideas_ids"), _ideas_uri: "goal", _goal_id: 0 } ,{
+      boxes: [await stringToBytes("_ideas_uris", "_ideas_ids")]
+    })).return!;
+    // console.log(sender.addr);
+
+    console.log("Done--------------->Ideas");
 
     // (await appClient.createIdeas({ _ideas_uri: "goal", _goal_id: 0 })).return!;
     // (await appClient.setIdeas({ _ideas_uri: "goal2", _ideas_id: 0 })).return!;
     // (await appClient.addDonation({ _donation_id: new Uint8Array(Buffer.from("0")), _ideas_id: 0, _doantion: 20, _donator: "tester" }, {
     //   boxes: [new Uint8Array(Buffer.from("_donations0"))]
     // })).return!;
-    // (await appClient.addDonation({ _donation_id: new Uint8Array(Buffer.from("1")), _ideas_id: 0, _doantion: 20, _donator: "tester" }, {
-    //   boxes: [new Uint8Array(Buffer.from("_donations1"))]
+    // (await appClient.addDonation({ boxMBRPayment:boxMBRPayment, _donation_id: new Uint8Array(Buffer.from("0")), _ideas_id:  new Uint8Array(Buffer.from("0")),_ideas_id_int:0, _doantion: 20, _donator: "tester" }, {
+    //   boxes: [new Uint8Array(Buffer.from("_donations0")),new Uint8Array(Buffer.from("_ideas_uris0"))]
     // })).return!;
     // (await appClient.addDonation({ _ideas_id: 0, _doantion: 15, _donator: "test2" })).return!;
 
@@ -348,14 +318,14 @@ describe('Granddao', () => {
 
 
 
-    (await appClient.joinCommunity({ boxMBRPayment: boxMBRPayment, _join_id: await stringToBytes("", "_join_ids"), dao_id: Number(0), person:"test" }, {
-      boxes: [await stringToBytes("_joined_person", "_join_ids")]
-    }));
+    // (await appClient.joinCommunity({ boxMBRPayment: boxMBRPayment, _join_id: await stringToBytes("", "_join_ids"), dao_id: Number(0), person: "test" }, {
+    //   boxes: [await stringToBytes("_joined_person", "_join_ids")]
+    // }));
 
 
     //View
 
-    let output = await getAllGlobalMap();
+    // let output = await getAllGlobalMap();
 
     // //Dao
     // await getAllDaos();
@@ -377,18 +347,8 @@ describe('Granddao', () => {
     // let output = await donations_uri(0);
     // await getAllBoxMap();
 
-    console.log();
+    // console.log();
   });
 
 
-  test('vote & getVotes', async () => {
-
-    const res = (await appClient.appClient.getBoxValueFromABIType(
-      '_donations1',
-      algosdk.ABIType.from('string')
-    )) as String;
-
-    console.log(res)
-
-  });
 });

@@ -246,6 +246,11 @@
       "name": "addDonation",
       "args": [
         {
+          "name": "boxMBRPayment",
+          "type": "pay",
+          "desc": ""
+        },
+        {
           "name": "_donation_id",
           "type": "byte[]",
           "desc": ""

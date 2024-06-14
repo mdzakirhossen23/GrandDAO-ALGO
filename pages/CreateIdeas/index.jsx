@@ -123,7 +123,6 @@ export default function CreateIdeas() {
 				boxes: [await stringToBytes("_ideas_uris", "_ideas_ids")]
 			}));
 
-			// 	await sendTransaction(await window.contract.populateTransaction.create_ideas(JSON.stringify(createdObject), Number(id), smart_contracts,signerAddress.toLocaleUpperCase()))
 		} catch (error) {
 			console.error(error)
 			return

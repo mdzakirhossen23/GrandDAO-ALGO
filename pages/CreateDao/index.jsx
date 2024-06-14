@@ -16,6 +16,7 @@ import { algod } from '../../services/useContract'
 import algosdk, { ABIType, ABIValue, Algodv2 } from 'algosdk';
 import { useAlgoContext } from "../../contexts/AlgoContext";
 
+
 export default function CreateDao() {
   const [DaoImage, setDaoImage] = useState([]);
   const { contract, signerAddress, sendTransaction, formatTemplate } = useContract()
@@ -159,15 +160,6 @@ export default function CreateDao() {
     };
     console.log("======================>Creating Dao");
     try {
-      // const valueAll = await contract.get_all_daos() //Getting dao URI from smart contract
-
-      // // //Getting the dao id of new one
-      // let daoid = valueAll.length;
-      // if (document.getElementById("plugin").checked) {
-      //   await CreatePlugin(
-      //     `http://${window.location.host}/daos/dao?[${daoid}]`
-      //   );
-      // }
 
 
 
@@ -181,8 +173,6 @@ export default function CreateDao() {
       });
 
 
-      // Creating Dao in Smart contract from metamask chain
-      // await sendTransaction(await window.contract.populateTransaction.create_dao());
 
     } catch (error) {
       console.error(error);
@@ -191,91 +181,6 @@ export default function CreateDao() {
     }
     router.push("/daos"); //After the success it will redirect the user to /dao page
   }
-
-  // //Function after clicking Create Dao Button
-  // async function createDao() {
-  //   var CreateDAOBTN = document.getElementById("CreateDAOBTN");
-  //   CreateDAOBTN.disabled = true;
-  //   let allFiles = [];
-  //   for (let index = 0; index < DaoImage.length; index++) {
-  //     //Gathering all files link
-  //     const element = DaoImage[index];
-  //     const metadata = await client.storeBlob(element);
-  //     const urlImageDao = {
-  //       url: "https://" + metadata + ".ipfs.nftstorage.link",
-  //       type: element.type,
-  //     };
-  //     allFiles.push(urlImageDao);
-  //   }
-
-  //   //Creating an object of all information to store in EVM
-  //   const createdObject = {
-  //     title: 'Asset Metadata',
-  //     type: 'object',
-  //     properties: {
-  //       Title: {
-  //         type: 'string',
-  //         description: DaoTitle,
-  //       },
-  //       Description: {
-  //         type: 'string',
-  //         description: DaoDescription,
-  //       },
-  //       Start_Date: {
-  //         type: 'string',
-  //         description: StartDate,
-  //       },
-  //       logo: {
-  //         type: 'string',
-  //         description: allFiles[0]
-  //       },
-  //       wallet: {
-  //         type: 'string',
-  //         description: signerAddress
-  //       },
-  //       SubsPrice: {
-  //         type: 'number',
-  //         description: SubsPrice
-  //       },
-  //       typeimg: {
-  //         type: 'string',
-  //         description: "Dao"
-  //       },
-  //       allFiles
-  //     }
-  //   };
-  //   console.log("======================>Creating Dao");
-  //   try {
-  //     const valueAll = await contract.get_all_daos() //Getting dao URI from smart contract
-
-  //     // //Getting the dao id of new one
-  //     let daoid = valueAll.length;
-  //     if (document.getElementById("plugin").checked) {
-  //       await CreatePlugin(
-  //         `http://${window.location.host}/daos/dao?[${daoid}]`
-  //       );
-  //     }
-  //     var template = await (await fetch(`/template/template.html`)).text();
-
-  //     let changings = [{
-  //       key: "dao-title",
-  //       value: DaoTitle
-  //     }, {
-  //       key: "dao-image",
-  //       value: allFiles[0].url
-  //     }]
-  //     let formatted_template = formatTemplate(template,changings)
-
-  //     // Creating Dao in Smart contract from metamask chain
-  //     await sendTransaction(await window.contract.populateTransaction.create_dao(signerAddress, JSON.stringify(createdObject), formatted_template));
-
-  //   } catch (error) {
-  //     console.error(error);
-  //     return;
-  //     // window.location.href = "/login?[/]"; //If found any error then it will let the user to login page
-  //   }
-  //   router.push("/daos"); //After the success it will redirect the user to /dao page
-  // }
 
 
   function FilehandleChange(dao) {

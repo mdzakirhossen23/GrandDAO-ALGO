@@ -2,7 +2,6 @@ import { Button } from "@heathmont/moon-core-tw";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import SlideShow from "../../../../../components/components/Slideshow";
-import useContract from "../../../../../services/useContract";
 import { ControlsChevronLeft } from "@heathmont/moon-icons-tw";
 import { useSnackbar } from 'notistack';
 import UseFormTextArea from "../../../../../components/components/UseFormTextArea";
@@ -35,7 +34,6 @@ export default function GrantIdeas() {
   const [IdeasURI, setIdeasURI] = useState({ ideasId: "", Title: "", Description: "", wallet: "", logo: "", End_Date: "", voted: 0, delegAmount: 0, delegDated: "", isVoted: true, isOwner: true, allfiles: [] });
   const [DonatemodalShow, setDonatemodalShow] = useState(false);
   const [AccountAddress, setAccountAddress] = useState("");
-  const { contract, signerAddress, sendTransaction, saveReadMessage } = useContract();
   const [Comment, CommentInput, setComment] = UseFormTextArea({
     defaultValue: "",
     placeholder: "Your comment",
@@ -98,21 +96,6 @@ export default function GrantIdeas() {
     fetchContractData();
   }, [accountAddress]);
 
-  useEffect(() => {
-    function SetReadSettings() {
-      var messages = document.querySelectorAll(".read-message");
-      for (let i = 0; i < messages.length; i++) {
-        const element = messages[i];
-        observerMessage.observe(element);
-      }
-      var replys = document.querySelectorAll(".read-reply");
-      for (let i = 0; i < replys.length; i++) {
-        const element = replys[i];
-        observerReply.observe(element);
-      }
-    }
-    SetReadSettings();
-  }, [emptydata]);
 
   useEffect(() => {
     DesignSlide();
@@ -138,6 +121,11 @@ export default function GrantIdeas() {
         setIdeasId(id); //setting Ideas id
         id = Number(id);
         let ideasValue = await getMapValue('_ideas_uris', id)
+        let donated = 0;
+        try {
+          donated = await getMapValue('_donated', id)
+
+        } catch (ex) { }
 
         const object = JSON.parse(ideasValue[1]);
         let goalValue = null;
@@ -172,7 +160,7 @@ export default function GrantIdeas() {
 
         setAccountAddress(object.properties.wallet.description);
         let votecount = Allvotes.length;
-        let donations = Number(ideasValue[2]) / 1e6;
+        let donations = Number(donated) / 1e6;
 
         setIdeasURI({
           ideasId: id,
@@ -204,7 +192,7 @@ export default function GrantIdeas() {
               address: object.address,
               message: object.message,
               date: object.date,
-              id: object.id,
+              id: messageValue[0],
               replies: []
             };
             arr.push(newComment);
@@ -213,39 +201,37 @@ export default function GrantIdeas() {
 
 
         }
+
+        const totalReplies = allMaps["_reply_ids"]?.value;
+
+        for (let i = 0; i < Number(arr.length); i++) {
+          try {
+            const commentId = Number(arr[i].id);
+            for (let j = 0; j < Number(totalReplies); j++) {
+              const repliesValue = await getMapValue('all_replies', j)
+
+              if (commentId !== Number(repliesValue[1])) continue;
+              const object = JSON.parse(repliesValue[3].toString())
+              let newReply = {
+                id: object.id,
+                message: object.message,
+                address: object.address,
+                date: object.date
+              };
+              arr[i].replies .push(newReply);
+            }
+          } catch (e) { console.log(e); continue }
+        }
+
+
+
+
+
         setCommentsList(arr)
 
-        // // Comments and Replies
-        // const totalComments = await contract.getMsgIDs(Number(id)) //Getting total comments (Number) of this idea
-        // // const arr = []
-        // for (let i = 0; i < Object.keys(totalComments).length; i++) {
-        // 	//total comments number Iteration
-        // 	const commentId = Number(totalComments[i]);
-        // 	let commentInfo = await contract.all_messages(commentId);
-        // 	const object = JSON.parse(commentInfo.message)
-        // 	let newComment = {
-        // 		address: object.address,
-        // 		message: object.message,
-        // 		date: object.date,
-        // 		id: object.id,
-        // 		replies: []
-        // 	};
 
-        // 	const totalReplies = await contract.getReplyIDs(Number(commentId)) //Getting total replies (Number) of this comment
-        // 	for (let i = 0; i < Object.keys(totalReplies).length; i++) {
-        // 		const replyId = Number(totalReplies[i]);
-        // 		let replyInfo = await contract.all_replies(replyId);
-        // 		const object = JSON.parse(replyInfo.message)
-        // 		let newReply = {
-        // 			id: object.id,
-        // 			message: object.message,
-        // 			address: object.address,
-        // 			date: object.date
-        // 		};
-        // 		newComment.replies.push(newReply)
-        // 	}
-        // 	CommentsList.push(newComment);
-        // }
+
+
         removeElementFromArrayBYID(emptydata, 0, setemptydata)
         if (document.getElementById("Loading")) document.getElementById("Loading").style = "display:none";
       }
@@ -254,82 +240,6 @@ export default function GrantIdeas() {
     }
     running = false;
   }
-  // async function fetchContractData() {
-  // 	running = true;
-  // 	try {
-  // 		if (contract && id) {
-  // 			setIdeasId(id); //setting Ideas id
-  // 			id = Number(id);
-
-  // 			const ideaURI = await contract.ideas_uri(Number(id)); //Getting ideas uri
-  // 			const object = JSON.parse(ideaURI); //Getting ideas uri
-  // 			Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
-  // 			setGoal_id(Goalid);
-  // 			const goalURI = JSON.parse(await contract.goal_uri(Number(Goalid))); //Getting goal URI
-  // 			let isvoted = false;
-  // 			const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(id)); //Getting all votes
-  // 			for (let i = 0; i < Allvotes.length; i++) {
-  // 				const element = Allvotes[i];
-  // 				if (element === signerAddress) isvoted = true;
-  // 			}
-  // 			setAccountAddress(object.properties.wallet.description);
-  // 			setPollIndex(object.properties?.Referenda?.description);
-  // 			setIdeasURI({
-  // 				ideasId: id,
-  // 				Title: object.properties.Title.description,
-  // 				Description: object.properties.Description.description,
-  // 				Referenda: object.properties?.Referenda?.description,
-  // 				wallet: object.properties.wallet.description,
-  // 				logo: object.properties.logo.description.url,
-  // 				End_Date: goalURI.properties.End_Date?.description,
-  // 				voted: Object.keys(Allvotes).length,
-  // 				donation: Number((await contract._ideas_uris(Number(id))).donation) / 1e18,
-  // 				isVoted: isvoted,
-  // 				isOwner: object.properties.wallet.description.toString().toLocaleUpperCase() === signerAddress.toString().toLocaleUpperCase() ? true : false,
-  // 				allfiles: object.properties.allFiles
-  // 			});
-
-  // 			setimageList(object.properties.allFiles);
-
-  // 			// Comments and Replies
-  // 			const totalComments = await contract.getMsgIDs(Number(id)) //Getting total comments (Number) of this idea
-  // 			// const arr = []
-  // 			for (let i = 0; i < Object.keys(totalComments).length; i++) {
-  // 				//total comments number Iteration
-  // 				const commentId = Number(totalComments[i]);
-  // 				let commentInfo = await contract.all_messages(commentId);
-  // 				const object = JSON.parse(commentInfo.message)
-  // 				let newComment = {
-  // 					address: object.address,
-  // 					message: object.message,
-  // 					date: object.date,
-  // 					id: object.id,
-  // 					replies: []
-  // 				};
-
-  // 				const totalReplies = await contract.getReplyIDs(Number(commentId)) //Getting total replies (Number) of this comment
-  // 				for (let i = 0; i < Object.keys(totalReplies).length; i++) {
-  // 					const replyId = Number(totalReplies[i]);
-  // 					let replyInfo = await contract.all_replies(replyId);
-  // 					const object = JSON.parse(replyInfo.message)
-  // 					let newReply = {
-  // 						id: object.id,
-  // 						message: object.message,
-  // 						address: object.address,
-  // 						date: object.date
-  // 					};
-  // 					newComment.replies.push(newReply)
-  // 				}
-  // 				CommentsList.push(newComment);
-  // 			}
-  // 			removeElementFromArrayBYID(emptydata, 0, setemptydata)
-  // 			if (document.getElementById("Loading")) document.getElementById("Loading").style = "display:none";
-  // 		}
-  // 	} catch (error) {
-  // 		console.error(error);
-  // 	}
-  // 	running = false;
-  // }
 
   async function DesignSlide() {
     if (document.querySelector('[data-type="prev"]') !== null) {
@@ -346,36 +256,6 @@ export default function GrantIdeas() {
     }
   }
 
-  const observerMessage = new window.IntersectionObserver(async ([entry]) => {
-    if (entry.isIntersecting) {
-      let elm = entry.target;
-      let id = Number(elm.dataset.id);
-      await saveReadMessage(id, ideaId, "message")
-
-      return
-    }
-    console.log('LEAVE')
-  }, {
-    root: null,
-    threshold: 1, // set offset 0.1 means trigger if atleast 10% of element in viewport
-  })
-
-
-  const observerReply = new window.IntersectionObserver(async ([entry]) => {
-    if (entry.isIntersecting) {
-      let elm = entry.target;
-      let id = Number(elm.dataset.id);
-
-      await saveReadMessage(id, ideaId, "reply")
-
-
-      return
-    }
-    console.log('LEAVE')
-  }, {
-    root: null,
-    threshold: 1, // set offset 0.1 means trigger if atleast 10% of element in viewport
-  })
 
   setInterval(function () {
     calculateTimeLeft();
@@ -404,7 +284,7 @@ export default function GrantIdeas() {
   async function VoteIdees() {
     try {
       // Creating Ideas in Smart contract
-      if (window.localStorage.getItem("login-type") == "pera" && window.localStorage.getItem("loggedin") == "true") {
+      if (window.localStorage.getItem("login-type") == "pera") {
         let boxMBRPayment = await payToApp();
 
         (await appClient.createIdeasVote({ boxMBRPayment: boxMBRPayment, _ideas_votes_id: await stringToBytes("", "_ideas_vote_ids"), _goal_id: Number(Goalid), _ideas_id: Number(id), _wallet: accountAddress.address }, {
@@ -501,10 +381,8 @@ export default function GrantIdeas() {
       boxes: [await stringToBytes("all_replies", "_reply_ids")]
     }));
 
-
-    // await sendTransaction(await window.contract.populateTransaction.sendReply(Number(MessageId), JSON.stringify(newReply), Number(ideaId), window?.ethereum?.selectedAddress?.toLocaleUpperCase()));
     removeElementFromArrayBYID(emptydata, 0, setemptydata)
-    
+
   }
 
 
@@ -562,7 +440,7 @@ export default function GrantIdeas() {
           />
 
           <Loader element={<div className="flex">Voted: {IdeasURI.voted} </div>} width={"100%"} />
-          <Loader element={<div className="flex">Donated: {IdeasURI.donation} Algo ( {USDPrice * IdeasURI.donation} USD) </div>} width={"100%"} />
+          <Loader element={<div className="flex">Donated: {IdeasURI.donation} Algo ( {(USDPrice * IdeasURI.donation).toFixed(4)} USD) </div>} width={"100%"} />
 
           <Loader element={<p>{IdeasURI.Description} </p>} width={"100%"} />
         </div>
@@ -644,16 +522,15 @@ export default function GrantIdeas() {
           ))}
         </div>
       </div>
-      {/*
-			<DonateCoin
-				ideasid={ideaId}
-				show={DonatemodalShow}
-				onHide={() => {
-					setDonatemodalShow(false);
-				}}
-				address={AccountAddress}
-			/>
-		*/}
+      <DonateCoin
+        ideasid={ideaId}
+        show={DonatemodalShow}
+        onHide={() => {
+          setDonatemodalShow(false);
+        }}
+        title={IdeasURI.Title}
+        address={AccountAddress}
+      />
     </>
   );
 }

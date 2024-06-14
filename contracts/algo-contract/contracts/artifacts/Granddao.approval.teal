@@ -692,18 +692,13 @@ addDonation:
 	proto 6 0
 
 	// contracts/algo-contract/contracts/granddao.algo.ts:184
-	// this._ideas_uris(_ideas_id).value.donation
-	byte 0x5f69646561735f75726973 // "_ideas_uris"
+	// this._donated(_ideas_id).value =  _doantion
+	byte 0x5f646f6e61746564 // "_donated"
 	frame_dig -3 // _ideas_id: bytes
 	concat
-	box_get
-	assert
-	store 255 // full array
-	load 255 // full array
-	extract 10 8
-	btoi
 	frame_dig -5 // _doantion: uint64
-	+
+	itob
+	box_put
 
 	// contracts/algo-contract/contracts/granddao.algo.ts:186
 	// this._donations(_donation_id).value ={

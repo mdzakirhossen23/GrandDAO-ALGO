@@ -36,30 +36,29 @@ export function WormholeContext({ children }) {
     const ECCcontract = new ethers.Contract(chainInfo.ECC, ECCABI.abi, signer)
     const wormholeFee = await ECCcontract.getMessageFee();
 
-    // const reciept: ethers.ContractReceipt = await (await ECCcontract.sendVAA(Buffer.from(_ideas_votes_id.toString()), _goal_id,_ideas_id,_wallet, {
-    //   value: wormholeFee
-    // })).wait();
+    const reciept: ethers.ContractReceipt = await (await ECCcontract.sendVAA(Buffer.from(_ideas_votes_id.toString()), _goal_id,_ideas_id,_wallet, {
+      value: wormholeFee
+    })).wait();
 
-    // const emitterAddress = getEmitterAddressEth(chainInfo.ECC);
-    // const sequence = await parseSequenceFromLogEth(reciept, chainInfo.Core);
+    const emitterAddress = getEmitterAddressEth(chainInfo.ECC);
+    const sequence = await parseSequenceFromLogEth(reciept, chainInfo.Core);
 
-    // const vaaURL = `${WORMHOLE_RPC_HOST}/v1/vaas/${chainInfo.wormholeChainId}/${emitterAddress}/${sequence}`;
-    // let vaaBytes:any = {}
-    // try {
-    //   vaaBytes = await (await fetch(vaaURL)).json();
+    const vaaURL = `${WORMHOLE_RPC_HOST}/v1/vaas/${chainInfo.wormholeChainId}/${emitterAddress}/${sequence}`;
+    let vaaBytes:any = {}
+    try {
+      vaaBytes = await (await fetch(vaaURL)).json();
   
-    // } catch (e) { }
-    // while (!vaaBytes?.data?.vaa) {
-    //   try {
-    //     console.log("VAA not found, retrying in 5s!");
-    //     await new Promise((r) => setTimeout(r, 5000)); //Timeout to let Guardiand pick up log and have VAA ready
-    //     vaaBytes = await (await fetch(vaaURL)).json();
-    //   } catch (e) { }
+    } catch (e) { }
+    while (!vaaBytes?.data?.vaa) {
+      try {
+        console.log("VAA not found, retrying in 5s!");
+        await new Promise((r) => setTimeout(r, 5000)); //Timeout to let Guardiand pick up log and have VAA ready
+        vaaBytes = await (await fetch(vaaURL)).json();
+      } catch (e) { }
   
-    // }
+    }
 
-    // let vaa_string = vaaBytes?.data?.vaa;
-    let vaa_string = "AQAAAAABAGgnAfMDHqQjX2Cdr952S++WM6sOZCJkGX353iY5ayAUV6/qRM9BiyoIFPTT0ign5hjI7Ap02GCLYZE4kXIVSEsBZmtCpwAAAAAADgAAAAAAAAAAAAAAAJ8+rNZfeKrciSQbHB5gG6m13p8nAAAAAAAAACMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKjBYRTY5QzBCNkJDRjZCMTQyN0FFNzQyMjVDNEE4MTE2RUUxMkExMzUxNwAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+    let vaa_string = vaaBytes?.data?.vaa;
     console.log(vaa_string);
     let parsedVaaBytes = parseVaa(Buffer.from(vaa_string, "base64"));
     let ParsedVaa = parsedVaaBytes.payload;

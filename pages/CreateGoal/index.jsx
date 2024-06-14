@@ -143,7 +143,6 @@ export default function CreateGoal() {
         boxes: [await stringToBytes("_goal_uris", "_goal_ids")]
       }))
 
-        // await sendTransaction(await window.contract.populateTransaction.create_goal(JSON.stringify(createdObject),Number(id),signerAddress.toLocaleUpperCase()));
 
     } catch (error) {
       console.error(error);

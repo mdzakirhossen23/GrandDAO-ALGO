@@ -13,8 +13,8 @@ import Airtable from 'airtable';
 const isKmd = (provider) => provider.metadata.name.toLowerCase() === 'kmd'
 declare let window;
 
-let appId = 681015181;
-let appAddress = "XUIQ5Z3TCHBIIXMJPUO4FSOBPC5MTOSKU655SJYZVYDQM4JLP63C6EWC5U"
+let appId = 681197121;
+let appAddress = "VFML5EUIXB5DPCMYZY366LOS7VLB7S2Z3BTRLNE4RWNHNKSPDGHB3ESKBU"
 let memonic_for_evm = "flush artefact leaf drip resource matrix divorce orbit raven car saddle wine between year sock able tool talent cinnamon gold search firm olympic abstract primary"
 
 const algodClient = algokit.getAlgoClient({
@@ -75,6 +75,8 @@ export function AlgoContext({ children }) {
     "all_ideas_votes": ["(uint64,uint64,string)", [0, 0, ""]],
     "_message_ids": ["uint64", 0],
     "all_messages": ["(uint64,uint64,string,string)", [0, 0, "", ""]],
+    "_reply_ids": ["uint64", 0],
+    "all_replies": ["(uint64,uint64,uint64,string)", [0, 0, "", ""]],
     "_join_ids": ["uint64", 0],
     "_joined_person": ["(uint64,string)", [0, ""]],
 
@@ -158,8 +160,9 @@ export function AlgoContext({ children }) {
 
     if (increment_id !== "") {
       let increment_in_db = (await getAllGlobalMap())[increment_id];
-      increment = increment_in_db === undefined ? 0 : increment_in_db;
+      increment = increment_in_db === undefined ? 0 : increment_in_db.value;
     }
+    console.log(increment)
 
     return new Uint8Array(Buffer.from(keyid + increment));
   }

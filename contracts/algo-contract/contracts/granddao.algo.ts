@@ -68,7 +68,7 @@ class Granddao extends Contract {
 
   _goal_uris = BoxMap<bytes, goal_uri_struct>({ prefix: "_goal_uris" });  //_goal_ids             => (Goal)                   Dao ID + Goal URI
   _ideas_uris = BoxMap<bytes, ideas_uri_struct>({ prefix: "_ideas_uris" });  //_ideas_ids            => (Ideas)                  Goal ID + Ideas URI
-  // _donated = GlobalStateMap<string, uint64>({ maxKeys: 10, prefix: "_donated/" });  //string            => (Donated to ideas)                amount
+  _donated = BoxMap<bytes, uint64>({ prefix: "_donated" });  //string            => (Donated to ideas)                amount
   _donations = BoxMap<bytes, donation_struct>({ prefix: "_donations" });  //uint64            => donation_struct
 
   all_ideas_votes = BoxMap<bytes, goal_ideas_votes_struct>({ prefix: "all_ideas_votes" });  //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + Wallet
@@ -181,7 +181,7 @@ class Granddao extends Contract {
 
   addDonation(boxMBRPayment: PayTxn,_donation_id: bytes, _ideas_id: bytes, _ideas_id_int: uint64, _doantion: uint64, _donator: string): void {
 
-    this._ideas_uris(_ideas_id).value.donation + _doantion;
+    this._donated(_ideas_id).value =  _doantion;
 
     this._donations(_donation_id).value ={
       ideas_id:_ideas_id_int,
