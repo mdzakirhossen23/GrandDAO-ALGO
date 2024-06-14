@@ -30,7 +30,6 @@ export default function DesignDao() {
   const sleep = milliseconds => {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
   }
-  const { contract, signerAddress, sendTransaction } = useContract();
 
   const [editor, setEditor] = useState(null);
   const regex = /\[(.*)\]/g
@@ -405,9 +404,11 @@ export default function DesignDao() {
     try {
       if (id != null) {
 
+        console.log("here");
 
         const daoValue = await getMapValue('_dao_uris', Number(id))
         const daoURI = JSON.parse(daoValue[1]) //Getting dao URI
+
         let dao_in_db =await getRecordFromDB('Dao',daoURI.id);
         const template_html = dao_in_db.fields['Template']
 
@@ -432,59 +433,6 @@ export default function DesignDao() {
       console.error(error);
     }
   }
-
-  // async function fetchContractData() {
-
-  //   //Fetching data from Smart contract
-  //   try {
-  //     if (contract && id != null) {
-
-
-  //       const daoURI = JSON.parse(await contract.dao_uri(Number(id))) //Getting dao URI
-  // 			const template_html = await contract._template_uris(Number(id));
-  // 			document.querySelector("#dao-container").innerHTML = template_html;
-
-  //       const totalGoals = await contract.get_all_goals_by_dao_id(Number(id)) //Getting all goals by dao id
-  //       const arr = []
-  //       for (let i = 0; i < Object.keys(totalGoals).length; i++) {
-  //         //total dao number Iteration
-  //         const goalid = await contract.get_goal_id_by_goal_uri(totalGoals[i])
-  //         let goal = totalGoals[i];
-  //         if (goal == "") continue;
-  //         const object = JSON.parse(goal)
-
-  //         if (object) {
-  //           arr.push({
-  //             //Pushing all data into array
-  //             goalId: goalid,
-  //             Title: object.properties.Title.description,
-  //             Description: object.properties.Description.description,
-  //             Budget: object.properties.Budget.description,
-  //             End_Date: object.properties.End_Date.description,
-  //             logo: object.properties.logo.description.url,
-  //           })
-  //         }
-  //       }
-  //       setList(arr)
-  //       DaoURI = ({
-  //         Title: daoURI.properties.Title.description,
-  //         Description: daoURI.properties.Description.description,
-  //         Start_Date: daoURI.properties.Start_Date.description,
-  //         logo: daoURI.properties.logo.description,
-  //         wallet: daoURI.properties.wallet.description,
-  //         typeimg: daoURI.properties.typeimg.description,
-  //         allFiles: daoURI.properties.allFiles.description,
-  //         SubsPrice: daoURI.properties?.SubsPrice?.description,
-  //         isOwner: daoURI.properties.wallet.description.toString().toLocaleUpperCase() === signerAddress.toString().toLocaleUpperCase() ? true : false
-  //       })
-
-  //       // window.querySelector('#dao-title').innerHTML = DaoURI.Title;
-  //       // window.querySelector('#dao-image').setAttribute("src", DaoURI.logo);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 
   let button_class = "py-2 px-4 gap-2 text-moon-14 rounded-moon-i-sm relative z-0 flex justify-center items-center font-medium no-underline overflow-hidden select-none outline-none transition duration-200 active:scale-90 focus-visible:shadow-focus btn-primary";
 

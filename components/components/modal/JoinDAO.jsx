@@ -31,7 +31,7 @@ export default function JoinDAO({ SubsPrice, show, onHide, address, title, dao_i
   const [isLoading, setisLoading] = useState(false);
   const [isSent, setisSent] = useState(false);
   const [Amount, setAmount] = useState(0);
-  const { contract, signerAddress, sendTransaction } = useContract()
+  const {  sendTransaction } = useContract()
 
   let alertBox = null;
   const [transaction, setTransaction] = useState({
@@ -84,7 +84,7 @@ export default function JoinDAO({ SubsPrice, show, onHide, address, title, dao_i
         suggestedParams: await algokit.getTransactionParams(undefined, algodClient),
       });
 
-      (await appClient.joinCommunity({ boxMBRPayment: boxMBRPayment, _join_id: await stringToBytes("", "_join_ids"), dao_id: Number(dao_id), person:"test" }, {
+      (await appClient.joinCommunity({ boxMBRPayment: boxMBRPayment, _join_id: await stringToBytes("", "_join_ids"), dao_id: Number(dao_id), person:accountAddress.address}, {
         boxes: [await stringToBytes("_joined_person", "_join_ids")]
       }));
 

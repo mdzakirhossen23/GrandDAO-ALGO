@@ -287,7 +287,7 @@ export default function Login() {
           <p className="text-trunks mt-4">Please connect to Pera or Metamask wallet in order to login.</p>
           <p className="text-trunks">You can use one of these networks:</p>
 
-          <p className="text-trunks">Algorand Testnet (Default), Moonbase alpha, Celo Alfajore, BNB, Goerli Test Network</p>
+          <p className="text-trunks">Algorand Testnet (Default), Moonbase alpha, Celo Alfajore Network</p>
         </div>
         <div className={styles.divider}></div>
         <div className={`${styles.title} flex flex-col items-center gap-8 `}>

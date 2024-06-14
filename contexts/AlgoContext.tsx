@@ -13,9 +13,9 @@ import Airtable from 'airtable';
 const isKmd = (provider) => provider.metadata.name.toLowerCase() === 'kmd'
 declare let window;
 
-let appId = 680144292;
-let appAddress = "SSRRMNR5AJENW23MFG6GEB4FWYG23DB7Y43C6HM6Z237PXYOMG4UBJOLGY"
-let memonic_for_evm = "bottom tail size rail system ready alcohol candy capable antenna wall dolphin master nose machine book danger horse loud chronic basic elephant scissors above firm"
+let appId = 681015181;
+let appAddress = "XUIQ5Z3TCHBIIXMJPUO4FSOBPC5MTOSKU655SJYZVYDQM4JLP63C6EWC5U"
+let memonic_for_evm = "flush artefact leaf drip resource matrix divorce orbit raven car saddle wine between year sock able tool talent cinnamon gold search firm olympic abstract primary"
 
 const algodClient = algokit.getAlgoClient({
   server: algodServer,
@@ -219,10 +219,13 @@ export function AlgoContext({ children }) {
 
   async function VoteIdeasEVM(output) {
     let _ideas_votes_id = Number(hexToUtf8(Buffer.from(output[0]).toString()));
+    let boxMBRPayment = await payToApp();
 
-    await appClient.voteIdeasEvm({ _ideas_votes_id: await stringToBytes(_ideas_votes_id), _goal_id: Number(output[1]), _ideas_id: Number(output[2]), _wallet: output[3].toString() }, {
+    await appClient.createIdeasVote({ boxMBRPayment: boxMBRPayment,_ideas_votes_id: await stringToBytes(_ideas_votes_id), _goal_id: Number(output[1]), _ideas_id: Number(output[2]), _wallet: output[3].toString() }, {
       boxes: [await stringToBytes("all_ideas_votes" + _ideas_votes_id, "")]
     })
+
+
   }
 
 
@@ -236,7 +239,6 @@ export function AlgoContext({ children }) {
     let newsender = null;
     if (window.localStorage.getItem("loggedin") == "true" && window.localStorage.getItem("login-type") == "metamask") {
       newsender = algosdk.mnemonicToSecretKey(memonic_for_evm)
-
     } else {
       newsender = { signer, addr: activeAccount?.address }
     }

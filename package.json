@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
-    "generate-client": "algokitgen generate -a /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/artifacts/Greendao.json -o /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/clients/GreendaoClient.ts",
-    "compile-contract": "tealscript /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/greendao.algo.ts /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/artifacts",
-    "generate-components": "algokit-generate-component /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/artifacts/Greendao.json /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/artifacts/components",
+    "generate-client": "algokitgen generate -a contracts/algo-contract/contracts/artifacts/Granddao.json -o contracts/algo-contract/contracts/contracts/DaoClient.ts",
+    "compile-contract": "tealscript contracts/algo-contract/contracts/granddao.algo.ts contracts/algo-contract/contracts/artifacts",
+    "generate-components": "algokit-generate-component contracts/algo-contract/contracts/artifacts/Granddao.json /workspace/GrandDAO-ALGO/contracts/algo-contract/contracts/artifacts/components",
     "algo-build": "npm run compile-contract && npm run generate-client",
     "build": "npm run css:build && next build",
     "start": "next start",
@@ -63,8 +63,6 @@
     "grapesjs-touch": "^0.1.1",
     "grapesjs-tui-image-editor": "^1.0.2",
     "grapesjs-typed": "^2.0.1",
-    "hardhat": "^2.15.0",
-    "hardhat-deploy": "^0.11.29",
     "https-browserify": "^1.0.0",
     "install": "^0.13.0",
     "isomorphic-fetch": "^3.0.0",
@@ -86,13 +84,16 @@
     "styled-components": "^5.3.5",
     "web3": "^1.10.0"
   },
+  "overrides": {
+    "@injectivelabs/sdk-ts@1.10.72": {
+      "@injectivelabs/token-metadata": "1.10.42"
+    }
+  },
   "devDependencies": {
     "@algorandfoundation/algokit-client-generator": "^2.2.5",
     "@algorandfoundation/tealscript": "^0.62.0",
     "@jest/globals": "^29.7.0",
     "@joe-p/algokit-generate-component": "^0.2.0",
-    "@nomiclabs/hardhat-ethers": "^2.0.0",
-    "@nomiclabs/hardhat-etherscan": "^3.1.7",
     "autoprefixer": "^10.4.9",
     "eslint": "8.16.0",
     "eslint-config-next": "12.1.6",

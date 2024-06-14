@@ -52,6 +52,7 @@
         "chainId": 44787,
         "shortName": "ALFA",
         "wormholeChain":"celo",
+        "wormholeChainId":14,
         "chain": "CELO",
         "networkId": 44787,
         "nativeCurrency": { "name": "CELO", "symbol": "CELO", "decimals": 18 },

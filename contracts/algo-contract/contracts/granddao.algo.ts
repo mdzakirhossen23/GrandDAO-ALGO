@@ -69,7 +69,7 @@ class Granddao extends Contract {
   _goal_uris = BoxMap<bytes, goal_uri_struct>({ prefix: "_goal_uris" });  //_goal_ids             => (Goal)                   Dao ID + Goal URI
   _ideas_uris = BoxMap<bytes, ideas_uri_struct>({ prefix: "_ideas_uris" });  //_ideas_ids            => (Ideas)                  Goal ID + Ideas URI
   // _donated = GlobalStateMap<string, uint64>({ maxKeys: 10, prefix: "_donated/" });  //string            => (Donated to ideas)                amount
-  _donations = BoxMap<bytes, string>({ prefix: "_donations" });  //uint64            => donation_struct
+  _donations = BoxMap<bytes, donation_struct>({ prefix: "_donations" });  //uint64            => donation_struct
 
   all_ideas_votes = BoxMap<bytes, goal_ideas_votes_struct>({ prefix: "all_ideas_votes" });  //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + Wallet
 
@@ -179,22 +179,17 @@ class Granddao extends Contract {
     return this._reply_ids.value;
   }
 
-  addDonation(_donation_id: bytes, _ideas_id: uint64, _doantion: uint64, _donator: string): void {
-    // let oldValue = this._ideas_uris(_ideas_id).value;
-    // oldValue.donation = oldValue.donation + _doantion;
+  addDonation(boxMBRPayment: PayTxn,_donation_id: bytes, _ideas_id: bytes, _ideas_id_int: uint64, _doantion: uint64, _donator: string): void {
 
-    // this._ideas_uris(_ideas_id).value = oldValue;
-    // this._donated(_donator).value = this._donated(_donator).value +_doantion ;
-    // this._donations(0).value ={
-    //   ideas_id:_ideas_id,
-    //   wallet:_donator,
-    //   donation:_doantion
-    // };
+    this._ideas_uris(_ideas_id).value.donation + _doantion;
 
-
-    this._donations(_donation_id).value = "test";
-
+    this._donations(_donation_id).value ={
+      ideas_id:_ideas_id_int,
+      wallet:_donator,
+      donation:_doantion
+    };
     this._donations_ids.value = this._donations_ids.value + 1;
+
 
   }
 
@@ -203,16 +198,6 @@ class Granddao extends Contract {
 
     this._join_ids.value = this._join_ids.value + 1;
     return this._join_ids.value;
-  }
-
-  VoteIdeasEVM( _ideas_votes_id: bytes, _goal_id: uint64, _ideas_id: uint64, _wallet: string):void{
-    this.all_ideas_votes(_ideas_votes_id).value = {
-      goal_id: _goal_id,
-      ideas_id: _ideas_id,
-      wallet: _wallet
-    };
-
-    this._ideas_vote_ids.value = this._ideas_vote_ids.value + 1;
   }
 
 }

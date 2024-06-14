@@ -3,7 +3,7 @@ import { algorandFixture } from '@algorandfoundation/algokit-utils/testing';
 import * as algokit from '@algorandfoundation/algokit-utils';
 
 import algosdk, { ABIType, ABIValue, Algodv2 } from 'algosdk';
-import { GranddaoClient } from '../contracts/contracts/DaoClient';
+import { GranddaoClient } from '../../../contexts/contracts/DaoClient';
 
 const fixture = algorandFixture();
 
